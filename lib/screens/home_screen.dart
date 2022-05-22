@@ -14,6 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   GetData? _getData;
   List<Data>? _dataList;
   int pageNumber = 0;
+  bool dataLoaded = false;
   final RefreshController refreshController =
       RefreshController(initialRefresh: true);
 
@@ -32,13 +33,22 @@ class _HomeScreenState extends State<HomeScreen> {
       _getData = GetData.fromJson(response.data);
     });
 
-    if (_dataList == null) {
+    if (_getData != null) {
       setState(() {
-        _dataList = _getData!.data;
+        dataLoaded = true;
       });
+      if (_dataList == null) {
+        setState(() {
+          _dataList = _getData!.data;
+        });
+      } else {
+        setState(() {
+          _dataList!.addAll(_getData!.data);
+        });
+      }
     } else {
       setState(() {
-        _dataList!.addAll(_getData!.data);
+        dataLoaded = false;
       });
     }
 
@@ -53,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getDefault() {
+    _dataList!.clear();
     setState(() {
       pageNumber = 0;
     });
@@ -68,35 +79,37 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.green.shade600),
       body: SmartRefresher(
         controller: refreshController,
-        enablePullUp: false,
+        enablePullUp: true,
         onRefresh: () async {
-          bool result = await getDefault();
-          if (result) {
+          getDefault();
+          if (dataLoaded) {
             refreshController.refreshCompleted();
           } else {
             refreshController.refreshFailed();
           }
         },
         onLoading: () async {
-          bool result = await getMore();
-          if (result) {
+          getMore();
+          if (dataLoaded) {
             refreshController.loadComplete();
           } else {
             refreshController.loadFailed();
           }
         },
-        child: ListView.separated(
-          itemBuilder: (context, index) {
-            final data = _dataList![index];
+        child: dataLoaded
+            ? ListView.separated(
+                itemBuilder: (context, index) {
+                  final data = _dataList![index];
 
-            return ListTile(
-              title: Text(data.firstName),
-              subtitle: Text(data.firstName),
-            );
-          },
-          separatorBuilder: (context, index) => const Divider(),
-          itemCount: _dataList!.length,
-        ),
+                  return ListTile(
+                    title: Text(data.firstName),
+                    subtitle: Text(data.firstName),
+                  );
+                },
+                separatorBuilder: (context, index) => const Divider(),
+                itemCount: _dataList!.length,
+              )
+            : const Center(child: CircularProgressIndicator()),
       ),
     );
   }
