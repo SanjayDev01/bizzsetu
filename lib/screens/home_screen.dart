@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Container(
                       alignment: Alignment.center,
                       width: MediaQuery.of(context).size.width * 0.9,
-                      height: 170,
+                      height: 150,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -140,30 +140,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: 140, height: 140, fit: BoxFit.cover),
                           ),
                           Expanded(
-                              child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Text(data.firstName,
-                                  style: const TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold)),
-                              Text(data.lastName,
-                                  style: const TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold)),
-                              Text(data.email,
-                                  style: const TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold)),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                            ],
-                          ))
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(data.firstName,
+                                    style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold)),
+                                Text(data.lastName,
+                                    style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold)),
+                                Text(data.email,
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold)),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 18,
+                          ),
                         ],
                       ),
                     );
