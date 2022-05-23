@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   GetData? _getData;
-  List<Data>? _dataList;
+  List<Data>? _dataList = [];
   int pageNumber = 0;
   bool dataLoaded = false;
   bool moreDataLoaded = true;
@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getData(pageNumber);
+    // getData(pageNumber);
   }
 
   Future<void> getData(int page) async {
@@ -103,7 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           onRefresh: () async {
-            getDefault();
+            if (_dataList!.isEmpty) {
+              getData(pageNumber);
+            } else {
+              getDefault();
+            }
             if (dataLoaded) {
               refreshController.refreshCompleted();
             } else {
