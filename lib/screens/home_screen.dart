@@ -16,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Data>? _dataList;
   int pageNumber = 0;
   bool dataLoaded = false;
+  bool moreDataLoaded = true;
   final RefreshController refreshController =
       RefreshController(initialRefresh: true);
 
@@ -46,11 +47,13 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _dataList!.addAll(_getData!.data);
         });
+
+        if (_getData!.data.isEmpty) {
+          setState(() {
+            moreDataLoaded = false;
+          });
+        }
       }
-    } else {
-      setState(() {
-        dataLoaded = false;
-      });
     }
 
     print(_dataList);
@@ -89,10 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
               } else if (mode == LoadStatus.loading) {
                 body = const CupertinoActivityIndicator();
               } else if (mode == LoadStatus.failed) {
-                body = const Text("Load Failed!Click retry!");
-              } else if (mode == LoadStatus.canLoading) {
-                body = const Text("release to load more");
-              } else if (mode == LoadStatus.noMore) {
                 body = const Text("Thats all the data!");
               } else {
                 body = const Text("Thats all the data!");
@@ -113,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           onLoading: () async {
             getMore();
-            if (dataLoaded) {
+            if (moreDataLoaded) {
               refreshController.loadComplete();
             } else {
               refreshController.loadFailed();
